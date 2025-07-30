@@ -2,13 +2,17 @@ name: 🚀 노션 블로그 동기화
 
 # 트리거 조건
 on:
-  # 수동 실행 (노션 버튼에서 호출)
+  # 🕐 자동 스케줄링 (추천) - 매 30분마다 체크
+  schedule:
+    - cron: '*/30 * * * *'  # 30분마다 실행
+    
+  # 수동 실행 (GitHub Actions 탭에서)
   workflow_dispatch:
     inputs:
       trigger_source:
         description: '트리거 소스'
         required: false
-        default: 'notion-button'
+        default: 'manual'
   
   # Repository Dispatch (외부 API 호출용)
   repository_dispatch:
