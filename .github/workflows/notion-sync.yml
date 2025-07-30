@@ -1,0 +1,267 @@
+name: 🚀 노션 블로그 동기화
+
+# 트리거 조건
+on:
+  # 수동 실행 (노션 버튼에서 호출)
+  workflow_dispatch:
+    inputs:
+      trigger_source:
+        description: '트리거 소스'
+        required: false
+        default: 'notion-button'
+  
+  # Repository Dispatch (외부 API 호출용)
+  repository_dispatch:
+    types: [notion-sync]
+
+# 환경 변수
+env:
+  NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+  NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+jobs:
+  sync-notion-blog:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 코드 체크아웃
+      - name: 📥 코드 체크아웃
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      # 2. Node.js 설정
+      - name: 🟢 Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      # 3. 노션 클라이언트 설치
+      - name: 📦 의존성 설치
+        run: |
+          npm init -y
+          npm install @notionhq/client
+      
+      # 4. 노션 데이터 동기화 스크립트 실행
+      - name: 🔄 노션 블로그 동기화
+        run: |
+          cat > sync-notion.js << 'EOF'
+          const { Client } = require('@notionhq/client');
+          const fs = require('fs');
+
+          async function syncNotionBlog() {
+            try {
+              console.log('🚀 노션 블로그 동기화 시작...');
+              
+              // 노션 클라이언트 초기화
+              const notion = new Client({ 
+                auth: process.env.NOTION_TOKEN 
+              });
+              
+              const databaseId = process.env.NOTION_DATABASE_ID;
+              
+              // 발행된 포스트 가져오기
+              const response = await notion.databases.query({
+                database_id: databaseId,
+                filter: {
+                  property: 'Status',
+                  select: { equals: 'Published' }
+                },
+                sorts: [{
+                  property: 'Published Date',
+                  direction: 'descending'
+                }]
+              });
+              
+              console.log(`📊 ${response.results.length}개의 발행된 포스트 발견`);
+              
+              // 포스트 데이터 변환
+              const posts = [];
+              for (const page of response.results) {
+                const postData = await transformNotionPage(notion, page);
+                posts.push(postData);
+              }
+              
+              // blog-data.json 생성
+              const blogData = {
+                posts: posts,
+                lastUpdated: new Date().toISOString(),
+                version: "1.0.0",
+                source: "github-actions"
+              };
+              
+              // 파일 저장
+              fs.writeFileSync('blog-data.json', JSON.stringify(blogData, null, 2));
+              
+              console.log(`✅ blog-data.json 업데이트 완료! (${posts.length}개 포스트)`);
+              
+            } catch (error) {
+              console.error('❌ 동기화 오류:', error);
+              process.exit(1);
+            }
+          }
+
+          async function transformNotionPage(notion, page) {
+            const properties = page.properties;
+            
+            // 기본 메타데이터 추출
+            const title = properties.Title?.title?.[0]?.plain_text || 'Untitled';
+            const excerpt = properties.Excerpt?.rich_text?.[0]?.plain_text || '';
+            const categoryData = properties.Category?.select;
+            const category = categoryData?.name?.toLowerCase().replace(/\\s+/g, '-') || 'general';
+            const categoryName = categoryData?.name || 'General';
+            const publishedDate = properties['Published Date']?.date?.start || new Date().toISOString().split('T')[0];
+            const readTime = `\${properties['Read Time']?.number || 5}분`;
+            const thumbnail = properties.Thumbnail?.rich_text?.[0]?.plain_text || '📝';
+
+            // 페이지 콘텐츠 가져오기
+            let content = '';
+            try {
+              const blocks = await notion.blocks.children.list({
+                block_id: page.id,
+                page_size: 100
+              });
+              
+              content = transformBlocksToHTML(blocks.results);
+            } catch (error) {
+              console.warn(`⚠️ 페이지 \${page.id} 콘텐츠 로드 실패:`, error.message);
+              content = '<p>콘텐츠를 불러올 수 없습니다.</p>';
+            }
+
+            return {
+              id: page.id.replace(/-/g, ''),
+              notionId: page.id,
+              title: title,
+              excerpt: excerpt,
+              category: category,
+              categoryName: categoryName,
+              date: publishedDate,
+              readTime: readTime,
+              thumbnail: thumbnail,
+              content: content
+            };
+          }
+
+          function transformBlocksToHTML(blocks) {
+            let html = '';
+            
+            for (const block of blocks) {
+              html += transformBlockToHTML(block);
+            }
+            
+            return html.trim();
+          }
+
+          function transformBlockToHTML(block) {
+            const type = block.type;
+            
+            switch (type) {
+              case 'paragraph':
+                const text = extractRichText(block.paragraph.rich_text);
+                return text ? `<p>\${text}</p>\\n` : '';
+                
+              case 'heading_1':
+                const h1Text = extractRichText(block.heading_1.rich_text);
+                return `<h2>\${h1Text}</h2>\\n`;
+                
+              case 'heading_2':
+                const h2Text = extractRichText(block.heading_2.rich_text);
+                return `<h3>\${h2Text}</h3>\\n`;
+                
+              case 'heading_3':
+                const h3Text = extractRichText(block.heading_3.rich_text);
+                return `<h4>\${h3Text}</h4>\\n`;
+                
+              case 'bulleted_list_item':
+                const liText = extractRichText(block.bulleted_list_item.rich_text);
+                return `<li>\${liText}</li>\\n`;
+                
+              case 'numbered_list_item':
+                const numText = extractRichText(block.numbered_list_item.rich_text);
+                return `<li>\${numText}</li>\\n`;
+                
+              case 'quote':
+                const quoteText = extractRichText(block.quote.rich_text);
+                return `<blockquote>\${quoteText}</blockquote>\\n`;
+                
+              case 'code':
+                const codeText = extractRichText(block.code.rich_text);
+                const language = block.code.language || '';
+                return `<pre><code class="\${language}">\${escapeHtml(codeText)}</code></pre>\\n`;
+                
+              case 'divider':
+                return '<hr>\\n';
+                
+              default:
+                return '';
+            }
+          }
+
+          function extractRichText(richTextArray) {
+            if (!richTextArray || !Array.isArray(richTextArray)) return '';
+            
+            return richTextArray.map(textObj => {
+              let text = textObj.plain_text || '';
+              
+              // HTML 이스케이프
+              text = escapeHtml(text);
+              
+              // 포맷팅 적용
+              if (textObj.annotations) {
+                const { bold, italic, strikethrough, underline, code } = textObj.annotations;
+                
+                if (code) text = `<code>\${text}</code>`;
+                if (bold) text = `<strong>\${text}</strong>`;
+                if (italic) text = `<em>\${text}</em>`;
+                if (strikethrough) text = `<del>\${text}</del>`;
+                if (underline) text = `<u>\${text}</u>`;
+              }
+              
+              // 링크 처리
+              if (textObj.href) {
+                text = `<a href="\${textObj.href}" target="_blank" rel="noopener">\${text}</a>`;
+              }
+              
+              return text;
+            }).join('');
+          }
+
+          function escapeHtml(text) {
+            const map = {
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+          }
+
+          // 실행
+          syncNotionBlog();
+          EOF
+          
+          node sync-notion.js
+      
+      # 5. 변경사항 커밋 및 푸시
+      - name: 📤 변경사항 커밋
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add blog-data.json
+            git commit -m "🚀 노션 블로그 자동 동기화 $(date '+%Y-%m-%d %H:%M:%S')"
+            git push
+            echo "✅ 블로그 데이터 업데이트 완료!"
+          else
+            echo "📋 변경사항 없음 - 동기화 불필요"
+          fi
+      
+      # 6. 결과 요약
+      - name: 📊 동기화 결과
+        run: |
+          echo "🎉 노션 블로그 동기화 완료!"
+          echo "📅 실행 시간: $(date)"
+          echo "🔗 GitHub Pages: https://half-nomad.github.io/half-nomad-bio/"
