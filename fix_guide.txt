@@ -1,0 +1,7 @@
+# 수정 방법: border-top 1px transparent 추가로 margin collapse 방지
+
+현재:
+<section id="approach" class="approach-section" style="margin-top: 2rem !important; margin-bottom: 2rem !important;">
+
+수정:
+<section id="approach" class="approach-section" style="margin-top: 2rem !important; margin-bottom: 2rem !important; border-top: 1px solid transparent;">

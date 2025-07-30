@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="post-title">블로그 포스트 - Half Nomad</title>
+    <meta name="description" id="post-description" content="Half Nomad의 전문 인사이트를 확인하세요.">
+    
+    <!-- Pretendard 폰트 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    
+    <style>
+        /* 기본 변수 - 메인 사이트와 동일 */
+        :root {
+            --indigo-dye: #274060;
+            --lapis-lazuli: #335c81;
+            --argentinian-blue: #65afff;
+            --space-cadet: #1b2845;
+            --united-nations-blue: #5899e2;
+            
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #999999;
+        }
+
+        /* 기본 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* 헤더 네비게이션 */
+        .blog-nav {
+            background: rgba(26, 26, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--argentinian-blue);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--argentinian-blue);
+        }
+
+        /* 포스트 헤더 */
+        .post-header {
+            padding: 4rem 0 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-ai-automation {
+            background: linear-gradient(135deg, var(--argentinian-blue), var(--united-nations-blue));
+            color: white;
+        }
+
+        .category-notion {
+            background: linear-gradient(135deg, var(--indigo-dye), var(--lapis-lazuli));
+            color: white;
+        }
+
+        .category-productivity {
+            background: linear-gradient(135deg, var(--space-cadet), var(--indigo-dye));
+            color: white;
+        }
+
+        .post-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .read-time {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .post-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--argentinian-blue), var(--united-nations-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .post-excerpt {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 포스트 본문 */
+        .post-content {
+            padding: 2rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .post-content h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1.5rem;
+            color: var(--argentinian-blue);
+        }
+
+        .post-content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--united-nations-blue);
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .post-content ul,
+        .post-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--argentinian-blue);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            background: rgba(101, 175, 255, 0.1);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        .post-content code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--argentinian-blue);
+        }
+
+        .post-content pre {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        /* 포스트 네비게이션 */
+        .post-navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .nav-post {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-post:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-post-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-post-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .nav-post.prev {
+            text-align: left;
+        }
+
+        .nav-post.next {
+            text-align: right;
+        }
+
+        /* 관련 포스트 */
+        .related-posts {
+            margin-bottom: 4rem;
+        }
+
+        .related-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--argentinian-blue);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .related-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .related-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(101, 175, 255, 0.2);
+        }
+
+        .related-card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .related-card-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* 푸터 */
+        .blog-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-cta {
+            margin-bottom: 2rem;
+        }
+
+        .footer-cta h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--argentinian-blue);
+        }
+
+        .footer-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--argentinian-blue), var(--united-nations-blue));
+            color: white;
+            box-shadow: 0 4px 15px rgba(101, 175, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(101, 175, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--argentinian-blue);
+            border: 2px solid var(--argentinian-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--argentinian-blue);
+            color: white;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .container,
+            .nav-content {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .post-header {
+                padding: 2rem 0 1.5rem;
+            }
+
+            .post-meta {
+                gap: 0.5rem;
+            }
+
+            .post-navigation {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .footer-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+
+            .post-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .post-content h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* 로딩 상태 */
+        .loading {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--argentinian-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .error-message h2 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="blog-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-brand">Half Nomad</a>
+            <div class="nav-links">
+                <a href="blog.html">← 블로그 목록</a>
+                <a href="index.html#contact">연락하기</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 로딩 상태 -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>포스트를 불러오는 중...</p>
+        </div>
+
+        <!-- 에러 상태 -->
+        <div id="error" class="error-message" style="display: none;">
+            <h2>포스트를 찾을 수 없습니다</h2>
+            <p>요청하신 포스트가 존재하지 않거나 삭제되었습니다.</p>
+            <a href="blog.html" class="cta-button btn-primary" style="margin-top: 1rem; display: inline-block;">블로그 목록으로 돌아가기</a>
+        </div>
+
+        <!-- 포스트 콘텐츠 -->
+        <div id="post-container" style="display: none;">
+            <!-- 포스트 헤더 -->
+            <header class="post-header">
+                <div class="post-meta">
+                    <span id="post-category" class="category-tag"></span>
+                    <span id="post-date" class="post-date"></span>
+                    <span id="post-read-time" class="read-time"></span>
+                </div>
+                <h1 id="post-title-display" class="post-title"></h1>
+                <p id="post-excerpt-display" class="post-excerpt"></p>
+            </header>
+
+            <!-- 포스트 본문 -->
+            <article class="post-content" id="post-content">
+                <!-- 실제 본문 내용이 여기에 동적으로 삽입됩니다 -->
+            </article>
+
+            <!-- 포스트 네비게이션 -->
+            <nav class="post-navigation" id="post-navigation">
+                <!-- 이전/다음 포스트 링크가 여기에 동적으로 삽입됩니다 -->
+            </nav>
+
+            <!-- 관련 포스트 -->
+            <section class="related-posts">
+                <h2 class="related-title">관련 포스트</h2>
+                <div class="related-grid" id="related-posts">
+                    <!-- 관련 포스트들이 여기에 동적으로 삽입됩니다 -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 푸터 -->
+        <footer class="blog-footer">
+            <div class="footer-cta">
+                <h3>더 많은 인사이트가 필요하신가요?</h3>
+                <div class="footer-buttons">
+                    <a href="mailto:mokka@half-nomad.com?subject=협업%20제안&body=협업%20유형:%0A상세%20내용:%0A예상%20일정:%0A연락%20가능%20시간대:" class="cta-button btn-primary">협업 제안하기</a>
+                    <a href="mailto:mokka@half-nomad.com?subject=강의%20요청&body=주제:%0A대상%20및%20규모:%0A희망%20일정:%0A장소:%0A기타%20요구사항:" class="cta-button btn-secondary">강의 요청하기</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 포스트 데이터 (실제 환경에서는 API나 CMS에서 가져옴)
+        const testPosts = [
+            {
+                id: 1,
+                title: "노션 API로 업무 자동화하기",
+                excerpt: "반복적인 데이터 입력을 자동화하여 시간을 절약하는 실전 가이드입니다.",
+                category: "notion",
+                categoryName: "노션 팁",
+                date: "2025-07-30",
+                readTime: "5분",
+                thumbnail: "📊",
+                content: `
+                    <h2>서론: 왜 노션 API인가?</h2>
+                    <p>매일 반복되는 데이터 입력 작업으로 소중한 시간을 낭비하고 계신가요? 노션 API를 활용하면 이런 반복 작업을 완전히 자동화할 수 있습니다.</p>
+                    
+                    <h2>1. 노션 API 기본 설정</h2>
+                    <p>먼저 노션에서 Integration을 생성해야 합니다. 다음 단계를 따라해보세요:</p>
+                    <ul>
+                        <li>노션 개발자 페이지에서 새 Integration 생성</li>
+                        <li>API 키 발급받기</li>
+                        <li>데이터베이스 권한 설정하기</li>
+                    </ul>
+
+                    <h2>2. 실전 자동화 예제</h2>
+                    <p>구글 시트의 데이터를 노션 데이터베이스로 자동 동기화하는 방법을 알아보겠습니다.</p>
+                    
+                    <pre><code>// 노션 API 기본 설정
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+async function syncToNotion(data) {
+    await notion.pages.create({
+        parent: { database_id: DATABASE_ID },
+        properties: {
+            Name: { title: [{ text: { content: data.name } }] },
+            Status: { select: { name: data.status } }
+        }
+    });
+}</code></pre>
+
+                    <h3>2.1 데이터 변환</h3>
+                    <p>구글 시트의 데이터를 노션 형식으로 변환하는 것이 핵심입니다. 각 필드 타입에 맞는 변환 로직을 구현해야 합니다.</p>
+
+                    <blockquote>
+                        💡 <strong>Pro Tip:</strong> 노션의 필드 타입(Text, Number, Select 등)을 미리 파악하고 변환 함수를 준비하세요.
+                    </blockquote>
+
+                    <h2>3. 자동화 워크플로우 구축</h2>
+                    <p>완전한 자동화를 위해서는 다음과 같은 워크플로우를 구축해야 합니다:</p>
+                    <ol>
+                        <li>데이터 수집 (구글 시트, 외부 API 등)</li>
+                        <li>데이터 검증 및 변환</li>
+                        <li>노션 데이터베이스 업데이트</li>
+                        <li>에러 처리 및 알림</li>
+                    </ol>
+
+                    <h2>결론</h2>
+                    <p>노션 API를 활용한 업무 자동화는 초기 설정에 시간이 걸리지만, 장기적으로 엄청난 시간 절약 효과를 가져다줍니다. 작은 자동화부터 시작해서 점진적으로 확장해나가는 것을 추천합니다.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "ChatGPT와 구글시트 연동하기",
+                excerpt: "AI를 활용해 데이터 분석과 보고서 작성을 자동화하는 방법을 알아봅니다.",
+                category: "ai-automation",
+                categoryName: "AI 자동화",
+                date: "2025-07-29",
+                readTime: "8분",
+                thumbnail: "🤖",
+                content: `
+                    <h2>ChatGPT API와 구글시트의 만남</h2>
+                    <p>구글시트에 있는 데이터를 ChatGPT API로 분석하고, 결과를 다시 시트에 자동으로 입력하는 완전 자동화 시스템을 구축해보겠습니다.</p>
+                    
+                    <h2>1. 구글 앱스 스크립트 기본 설정</h2>
+                    <p>구글 시트에서 확장 프로그램 > 앱스 스크립트를 선택하고, 새 프로젝트를 생성합니다.</p>
+                    
+                    <pre><code>function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('AI 분석')
+    .addItem('데이터 분석 시작', 'analyzeData')
+    .addToUi();
+}</code></pre>
+
+                    <h2>2. ChatGPT API 연동</h2>
+                    <p>OpenAI API 키를 안전하게 관리하고, API 호출 함수를 구현합니다.</p>
+
+                    <h3>2.1 API 키 설정</h3>
+                    <p>앱스 스크립트의 속성 서비스를 사용해 API 키를 안전하게 저장합니다.</p>
+
+                    <blockquote>
+                        🔒 <strong>보안 주의:</strong> API 키는 절대 코드에 직접 입력하지 마세요. 속성 서비스나 환경 변수를 활용하세요.
+                    </blockquote>
+
+                    <h2>3. 실전 활용 사례</h2>
+                    <p>다음과 같은 업무에 활용할 수 있습니다:</p>
+                    <ul>
+                        <li>고객 피드백 감정 분석</li>
+                        <li>매출 데이터 트렌드 분석</li>
+                        <li>제품 리뷰 요약</li>
+                        <li>경쟁사 분석 자동화</li>
+                    </ul>
+
+                    <h2>결론</h2>
+                    <p>ChatGPT와 구글시트의 연동으로 반복적인 데이터 분석 업무를 대폭 줄일 수 있습니다. 한 번 설정해두면 계속 활용할 수 있는 강력한 도구입니다.</p>
+                `
+            },
+            {
+                id: 3,
+                title: "생산성 향상을 위한 워크플로우 설계",
+                excerpt: "개인과 팀의 효율성을 극대화하는 체계적인 업무 프로세스 구축법입니다.",
+                category: "productivity",
+                categoryName: "생산성",
+                date: "2025-07-28",
+                readTime: "7분",
+                thumbnail: "⚡",
+                content: `
+                    <h2>효율적인 워크플로우의 핵심 원칙</h2>
+                    <p>생산성 높은 워크플로우는 하루아침에 만들어지지 않습니다. 체계적인 접근과 지속적인 개선이 필요합니다.</p>
+                    
+                    <h2>1. 현재 프로세스 분석</h2>
+                    <p>개선하기 전에 현재 상태를 정확히 파악해야 합니다.</p>
+                    
+                    <h3>1.1 시간 추적</h3>
+                    <p>2주간 모든 업무 활동을 30분 단위로 기록해보세요. 예상보다 많은 시간이 낭비되는 구간을 발견할 수 있습니다.</p>
+
+                    <h3>1.2 병목 지점 식별</h3>
+                    <p>작업이 지연되는 주요 원인들을 찾아보세요:</p>
+                    <ul>
+                        <li>불필요한 승인 단계</li>
+                        <li>정보 부족으로 인한 대기</li>
+                        <li>도구 간 데이터 이동</li>
+                        <li>반복적인 수작업</li>
+                    </ul>
+
+                    <h2>2. 워크플로우 재설계</h2>
+                    <p>분석 결과를 바탕으로 새로운 프로세스를 설계합니다.</p>
+
+                    <blockquote>
+                        🎯 <strong>핵심 원칙:</strong> 가장 자주 하는 일을 가장 쉽게 만들어라.
+                    </blockquote>
+
+                    <h3>2.1 자동화 우선순위</h3>
+                    <ol>
+                        <li>반복 빈도가 높은 작업</li>
+                        <li>표준화 가능한 작업</li>
+                        <li>실수 위험이 큰 작업</li>
+                        <li>시간이 많이 걸리는 작업</li>
+                    </ol>
+
+                    <h2>3. 도구 선택과 통합</h2>
+                    <p>적절한 도구 선택과 통합이 워크플로우 성공의 핵심입니다.</p>
+
+                    <h3>3.1 도구 선택 기준</h3>
+                    <ul>
+                        <li>학습 비용 vs 효율성 증대</li>
+                        <li>기존 도구와의 호환성</li>
+                        <li>확장 가능성</li>
+                        <li>팀 협업 지원</li>
+                    </ul>
+
+                    <h2>4. 실행과 개선</h2>
+                    <p>완벽한 워크플로우는 처음부터 만들어지지 않습니다. 지속적인 실행과 개선이 필요합니다.</p>
+
+                    <h3>4.1 단계적 도입</h3>
+                    <p>한 번에 모든 것을 바꾸려 하지 마세요. 작은 개선부터 시작해서 점진적으로 확장하는 것이 성공 확률을 높입니다.</p>
+
+                    <h2>결론</h2>
+                    <p>효율적인 워크플로우는 단순히 도구의 문제가 아닙니다. 사고방식의 변화와 지속적인 개선 의지가 더 중요합니다. 작은 것부터 시작해서 꾸준히 개선해나가세요.</p>
+                `
+            },
+            {
+                id: 4,
+                title: "Zapier 없이 자동화 구축하기",
+                excerpt: "무료 도구들을 조합해서 강력한 자동화 시스템을 만드는 노하우를 공유합니다.",
+                category: "ai-automation",
+                categoryName: "AI 자동화",
+                date: "2025-07-27",
+                readTime: "6분",
+                thumbnail: "🔗",
+                content: `
+                    <h2>무료 자동화의 가능성</h2>
+                    <p>Zapier나 Make 같은 유료 서비스 없이도 강력한 자동화 시스템을 구축할 수 있습니다. 핵심은 무료 도구들의 창의적인 조합입니다.</p>
+                    
+                    <h2>1. 무료 자동화 도구 생태계</h2>
+                    <p>다음 도구들을 조합하면 대부분의 자동화 요구사항을 해결할 수 있습니다:</p>
+                    
+                    <h3>1.1 핵심 도구들</h3>
+                    <ul>
+                        <li><strong>구글 앱스 스크립트:</strong> 구글 워크스페이스 자동화</li>
+                        <li><strong>GitHub Actions:</strong> 개발 워크플로우 자동화</li>
+                        <li><strong>IFTTT:</strong> 간단한 트리거 기반 자동화</li>
+                        <li><strong>n8n (셀프호스팅):</strong> 복잡한 워크플로우</li>
+                    </ul>
+
+                    <h3>1.2 API 활용</h3>
+                    <p>대부분의 서비스가 무료 API를 제공합니다. 이를 활용해 서비스 간 연결을 구축할 수 있습니다.</p>
+
+                    <blockquote>
+                        💡 <strong>Pro Tip:</strong> API 한도를 미리 확인하고, 효율적인 호출 전략을 세우세요.
+                    </blockquote>
+
+                    <h2>2. 실전 구축 사례</h2>
+                    <p>실제로 구축한 자동화 시스템들을 소개합니다.</p>
+
+                    <h3>2.1 소셜미디어 콘텐츠 자동화</h3>
+                    <p>구글 시트에서 콘텐츠를 관리하고, 자동으로 여러 플랫폼에 발행하는 시스템:</p>
+                    
+                    <pre><code>function publishToSocial() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = sheet.getRange('A2:E10').getValues();
+  
+  data.forEach(row => {
+    if (row[4] === 'Ready') {
+      // 트위터 API 호출
+      postToTwitter(row[1]);
+      // 링크드인 API 호출
+      postToLinkedIn(row[1]);
+    }
+  });
+}</code></pre>
+
+                    <h3>2.2 고객 지원 자동화</h3>
+                    <p>이메일 분류부터 응답까지 자동화하는 시스템 구축 방법을 설명합니다.</p>
+
+                    <h2>3. 제한사항과 해결책</h2>
+                    <p>무료 도구의 한계를 인정하고, 창의적으로 해결하는 방법들을 소개합니다.</p>
+
+                    <h3>3.1 API 한도 관리</h3>
+                    <ul>
+                        <li>배치 처리로 호출 횟수 줄이기</li>
+                        <li>캐싱으로 중복 요청 방지</li>
+                        <li>여러 계정 로테이션</li>
+                    </ul>
+
+                    <h3>3.2 복잡성 관리</h3>
+                    <p>무료 도구로는 복잡한 로직 구현이 어려울 수 있습니다. 이때는 단계를 나누어 해결합니다.</p>
+
+                    <h2>4. 확장 전략</h2>
+                    <p>무료로 시작해서 필요에 따라 유료 서비스로 확장하는 전략을 수립합니다.</p>
+
+                    <h2>결론</h2>
+                    <p>예산이 부족하다고 자동화를 포기할 필요는 없습니다. 무료 도구들을 창의적으로 조합하면 놀라운 결과를 얻을 수 있습니다. 작게 시작해서 점진적으로 확장해나가세요.</p>
+                `
+            }
+        ];
+
+        // URL 파라미터에서 포스트 ID 가져오기
+        function getPostId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('id'));
+        }
+
+        // 포스트 데이터 찾기
+        function findPost(id) {
+            return testPosts.find(post => post.id === id);
+        }
+
+        // 포스트 렌더링
+        function renderPost(post) {
+            // 제목과 메타데이터 업데이트
+            document.getElementById('post-title').textContent = `${post.title} - Half Nomad`;
+            document.getElementById('post-description').setAttribute('content', post.excerpt);
+            
+            // 포스트 메타 정보
+            const categoryElement = document.getElementById('post-category');
+            categoryElement.textContent = post.categoryName;
+            categoryElement.className = `category-tag category-${post.category}`;
+            
+            document.getElementById('post-date').textContent = formatDate(post.date);
+            document.getElementById('post-read-time').textContent = `📖 ${post.readTime} 읽기`;
+            
+            // 포스트 제목과 요약
+            document.getElementById('post-title-display').textContent = post.title;
+            document.getElementById('post-excerpt-display').textContent = post.excerpt;
+            
+            // 포스트 본문
+            document.getElementById('post-content').innerHTML = post.content;
+            
+            // 네비게이션 렌더링
+            renderPostNavigation(post.id);
+            
+            // 관련 포스트 렌더링
+            renderRelatedPosts(post);
+        }
+
+        // 날짜 포맷팅
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // 포스트 네비게이션 렌더링
+        function renderPostNavigation(currentId) {
+            const currentIndex = testPosts.findIndex(post => post.id === currentId);
+            const prevPost = currentIndex < testPosts.length - 1 ? testPosts[currentIndex + 1] : null;
+            const nextPost = currentIndex > 0 ? testPosts[currentIndex - 1] : null;
+            
+            let navigationHTML = '';
+            
+            if (prevPost) {
+                navigationHTML += `
+                    <a href="blog-post.html?id=${prevPost.id}" class="nav-post prev">
+                        <div class="nav-post-label">← 이전 포스트</div>
+                        <div class="nav-post-title">${prevPost.title}</div>
+                    </a>
+                `;
+            } else {
+                navigationHTML += '<div></div>';
+            }
+            
+            if (nextPost) {
+                navigationHTML += `
+                    <a href="blog-post.html?id=${nextPost.id}" class="nav-post next">
+                        <div class="nav-post-label">다음 포스트 →</div>
+                        <div class="nav-post-title">${nextPost.title}</div>
+                    </a>
+                `;
+            } else {
+                navigationHTML += '<div></div>';
+            }
+            
+            document.getElementById('post-navigation').innerHTML = navigationHTML;
+        }
+
+        // 관련 포스트 렌더링
+        function renderRelatedPosts(currentPost) {
+            // 같은 카테고리의 다른 포스트들 찾기
+            const relatedPosts = testPosts
+                .filter(post => post.id !== currentPost.id && post.category === currentPost.category)
+                .slice(0, 3);
+            
+            // 관련 포스트가 부족하면 다른 포스트들로 채우기
+            if (relatedPosts.length < 3) {
+                const otherPosts = testPosts
+                    .filter(post => post.id !== currentPost.id && post.category !== currentPost.category)
+                    .slice(0, 3 - relatedPosts.length);
+                relatedPosts.push(...otherPosts);
+            }
+            
+            const relatedHTML = relatedPosts.map(post => `
+                <a href="blog-post.html?id=${post.id}" class="related-card">
+                    <h3 class="related-card-title">${post.thumbnail} ${post.title}</h3>
+                    <p class="related-card-excerpt">${post.excerpt}</p>
+                </a>
+            `).join('');
+            
+            document.getElementById('related-posts').innerHTML = relatedHTML;
+        }
+
+        // 에러 표시
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('post-container').style.display = 'none';
+        }
+
+        // 포스트 표시
+        function showPost() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('post-container').style.display = 'block';
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            const postId = getPostId();
+            
+            if (!postId) {
+                showError();
+                return;
+            }
+            
+            const post = findPost(postId);
+            
+            if (!post) {
+                showError();
+                return;
+            }
+            
+            // 짧은 로딩 시뮬레이션
+            setTimeout(() => {
+                renderPost(post);
+                showPost();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

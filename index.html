@@ -1,0 +1,631 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO 메타 태그 -->
+    <meta name="description" content="현장에서 검증된 AI/로우코드 자동화 솔루션. 외식업, 부동산, 이커머스 사업가를 위한 실전 교육과 컨설팅 서비스">
+    <meta name="keywords" content="AI 자동화, 로우코드, 노코드, 비즈니스 최적화, Make, n8n, 노션, 하프노마드, AI 교육">
+    <meta name="author" content="하프노마드 (Mokka)">
+    
+    <!-- Open Graph 메타 태그 -->
+    <meta property="og:title" content="하프노마드 | 현장에서 검증하고, 경험으로 가르칩니다">
+    <meta property="og:description" content="외식업, 부동산, 이커머스를 직접 운영하며 검증한 AI/로우코드 자동화 솔루션을 교육합니다">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://halfnomad.bio">
+    <meta property="og:image" content="./assets/images/og-business.jpg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="하프노마드 | AI/로우코드 자동화 전문가">
+    <meta name="twitter:description" content="현장 경험 기반 AI 교육과 비즈니스 자동화 컨설팅">
+    <meta name="twitter:image" content="./assets/images/twitter-business.jpg">
+    
+    <title>하프노마드 | 현장에서 검증하고, 경험으로 가르칩니다</title>
+    
+    <!-- 파비콘 -->
+    <link rel="icon" type="image/x-icon" href="./assets/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
+    
+    <!-- Performance Optimization -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"></noscript>
+    
+    <!-- Critical CSS (인라인 - 즉시 렌더링) -->
+    <style>
+/* Critical CSS - 초기 렌더링 최적화 */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;font-size:1rem;font-weight:400;line-height:1.5;color:#FFFFFF;background:#0a0a0a;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+:root{
+--primary:#274060;--secondary:#335c81;--accent:#65afff;--tertiary:#1b2845;--highlight:#5899e2;
+--bg-primary:#0a0a0a;--bg-secondary:#1a1a1a;--text-primary:#FFFFFF;--text-secondary:#E0E0E0;--text-muted:#B0B0B0;
+--gradient-headline:linear-gradient(135deg,#274060 0%,#335c81 50%,#65afff 100%);
+--gradient-cta:linear-gradient(45deg,#65afff 0%,#5899e2 100%);
+--spacing-md:1.5rem;--spacing-lg:2rem;--spacing-xl:3rem;--spacing-2xl:4rem;
+--font-size-base:clamp(1rem,2.5vw,1.125rem);--font-size-lg:clamp(1.25rem,3.5vw,1.5rem);
+--font-size-xl:clamp(1.5rem,4vw,2rem);--font-size-4xl:clamp(3rem,8vw,4.5rem);
+--container-max-width:1200px;--container-padding:2rem;--radius-lg:12px;--radius-full:9999px;
+--transition-normal:0.3s ease;--shadow-accent:0 8px 24px rgba(101,175,255,0.3)
+}
+
+.container{width:100%;max-width:var(--container-max-width);margin:0 auto;padding:0 var(--container-padding)}
+.hero-section{min-height:100vh;display:flex;align-items:center;position:relative;background:radial-gradient(ellipse at center,var(--bg-secondary) 0%,var(--bg-primary) 70%);overflow:hidden}
+.hero-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 80%,rgba(101,175,255,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(39,64,96,0.1) 0%,transparent 50%);pointer-events:none}
+.hero-content{position:relative;z-index:1;text-align:center}
+.hero-profile-image{width:120px;height:120px;border-radius:var(--radius-full);margin:0 auto var(--spacing-xl);border:4px solid var(--accent);padding:4px;background:var(--gradient-cta);box-shadow:var(--shadow-accent)}
+.hero-profile-image img{width:100%;height:100%;border-radius:var(--radius-full);object-fit:cover}
+.hero-headline{font-size:var(--font-size-4xl);font-weight:800;line-height:1.2;margin-bottom:var(--spacing-md);background:var(--gradient-headline);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-subtitle{font-size:var(--font-size-xl);font-weight:500;color:var(--text-secondary);margin-bottom:var(--spacing-lg);max-width:600px;margin-left:auto;margin-right:auto}
+.hero-description{font-size:var(--font-size-lg);color:var(--text-muted);margin-bottom:var(--spacing-2xl);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.625}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:var(--spacing-md) var(--spacing-xl);font-family:inherit;font-size:var(--font-size-base);font-weight:600;text-decoration:none;border:none;border-radius:var(--radius-full);cursor:pointer;transition:all var(--transition-normal);white-space:nowrap}
+.btn-cta{background:var(--gradient-cta);color:var(--text-primary);box-shadow:var(--shadow-accent)}
+.btn-secondary{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.hero-cta-group{display:flex;gap:var(--spacing-md);justify-content:center;flex-wrap:wrap;margin-bottom:var(--spacing-2xl)}
+.scroll-indicator{position:absolute;bottom:var(--spacing-xl);left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.875rem;animation:bounce 2s infinite}
+.scroll-indicator::after{content:'↓';font-size:var(--font-size-lg);color:var(--accent)}
+@keyframes bounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-10px)}60%{transform:translateX(-50%) translateY(-5px)}}
+@media (max-width:480px){:root{--container-padding:1rem}
+.hero-headline{font-size:2.5rem}.hero-subtitle{font-size:1.25rem}.hero-description{font-size:1rem}
+.hero-profile-image{width:100px;height:100px}.hero-cta-group{flex-direction:column;align-items:center}
+.btn{padding:1rem 2rem;font-size:0.9rem}}
+*:focus{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+    </style>
+    
+    <!-- Non-Critical CSS (비동기 로드) -->
+    <link rel="preload" href="assets/css/grid-system.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/grid-system.css"></noscript>
+    
+    <link rel="preload" href="assets/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/main.css"></noscript>
+    
+    <link rel="preload" href="assets/css/components.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/components.css"></noscript>
+    
+    <link rel="preload" href="assets/css/navigation.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/navigation.css"></noscript>
+    
+    <link rel="preload" href="assets/css/what-i-offer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/what-i-offer.css"></noscript>
+    
+    <link rel="preload" href="assets/css/final-cta-optimized.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/final-cta-optimized.css"></noscript>
+    
+    <link rel="preload" href="assets/css/current-projects.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/current-projects.css"></noscript>
+    
+    <link rel="preload" href="assets/css/hero-trust-styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/css/hero-trust-styles.css"></noscript>
+
+</head>
+
+<body>
+    <!-- 스크롤 진행률 바 -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+    
+    <!-- 네비게이션 -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="nav-logo">🤖</span>
+                <span class="nav-title">하프노마드</span>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#expertise" class="nav-link">Expertise</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            
+            <div class="nav-tools">
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="메뉴 열기">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨테이너 -->
+    <main class="main-container">
+        
+        <!-- 🏆 Hero Section -->
+        <section id="hero" class="section section-hero">
+            <div class="container">
+                <div class="hero-layout">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            현장에서 <span class="gradient-text">검증</span>하고,<br>
+                            경험으로 <span class="gradient-text">가르칩니다</span>
+                        </h1>
+                        <p class="hero-subtitle" style="text-align: left;">
+                            외식업, 부동산, 이커머스를 직접 운영하며 만든<br>
+                            <strong>AI/로우코드 자동화 솔루션</strong>을 사업가들과 나눕니다
+                        </p>
+                        <div class="hero-cta">
+                            <a href="#expertise" class="cta-button primary">더 알아보기</a>
+                            <a href="#contact" class="cta-button secondary">협업 문의</a>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-visual">
+                        <!-- 프로필 이미지 섹션 -->
+                        <div class="profile-section mb-4">
+                            <div class="profile-image-container">
+                                <img 
+                                    src="assets/images/profile/hero-profile.jpg" 
+                                    alt="하프노마드 (Mokka) 프로필 이미지"
+                                    class="profile-image"
+                                    loading="eager"
+                                >
+                                <div class="profile-badge">
+                                    <span class="badge-text">AI 자동화 전문가</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 통계 그리드 - Social Proof 통합 -->
+                        <div class="stats-section">
+                            <div class="grid grid-3 gap-md">
+                                <div class="stat-item">
+                                    <span class="stat-number gradient-text">7.9K+</span>
+                                    <span class="stat-label">Threads 팔로워<br>@half.nomad</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number gradient-text">4개</span>
+                                    <span class="stat-label">운영 브랜드<br>(현재 사업)</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number gradient-text">3개</span>
+                                    <span class="stat-label">검증된 협업분야<br>(이커머스/F&B/부동산)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 브랜드 로고들 - 업데이트 -->
+                        <div class="brands-section mt-4">
+                            <p class="brands-label">운영 중인 브랜드</p>
+                            <div class="flex flex-wrap gap-sm justify-center">
+                                <span class="brand-tag">모카팩토리</span>
+                                <span class="brand-tag">하프노마드</span>
+                                <span class="brand-tag">미친양꼬치</span>
+                                <span class="brand-tag">지피터스</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 신뢰도 메시지 추가 -->
+                        <div class="hero-trust-message mt-4">
+                            <p class="trust-text">
+                                <strong>"일상의 절반은 유목민처럼 살아갑니다"</strong><br>
+                                현장에서 직접 경험하고 검증한 방법론을 나눕니다
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 스크롤 인디케이터 -->
+            <div class="scroll-indicator">
+                <div class="scroll-arrow bounce-animation">
+                    <span>↓</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🤔 Problem & Solution Section -->
+        <section id="problem" class="section section-content">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="problem-block">
+                        <h2 class="section-title">이런 고민, 저도 했습니다</h2>
+                        <div class="card problem-card">
+                            <div class="problem-icon">😤</div>
+                            <h3>AI를 배우고 싶지만...</h3>
+                            <p>이론만 있고 정말 써먹을 수 있는 방법을<br>제대로 가르쳐주는 사람이 드물더라고요</p>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-block">
+                        <h2 class="section-title">그래서 직접 나서기로 했습니다</h2>
+                        <div class="card solution-card">
+                            <div class="solution-icon">💡</div>
+                            <h3>같은 고민을 하는 사업가로서</h3>
+                            <p>실제로 사업에서 써먹고 있는 <strong>검증된 방법</strong>을 체계적으로 교육하겠습니다</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎯 Core Expertise Section -->
+        <section id="expertise" class="section section-content">
+            <div class="container">
+                <div class="section-header mb-4">
+                    <h2 class="section-title">3가지 핵심 전문 분야</h2>
+                    <p class="section-subtitle">실제 사업에서 검증하고 있는 AI/자동화 영역들</p>
+                </div>
+                
+                <div class="expertise-grid">
+                    <article class="expertise-card">
+                        <div class="expertise-icon ai-marketing">🤖</div>
+                        <h3 class="expertise-title">AI를 활용한 바이브 마케팅</h3>
+                        <p class="expertise-description">여러 사업에서 직접 구축한 랜딩페이지, 웹앱, 자동화 시스템 예시</p>
+                        <ul class="expertise-highlights">
+                            <li>비개발자도 바로 적용 가능한 실용적 방법</li>
+                            <li>실제 전환율 데이터 기반 최적화</li>
+                            <li>ChatGPT, Claude 등을 활용한 콘텐츠 자동화</li>
+                        </ul>
+                        <a href="#contact" class="expertise-cta">
+                            더 알아보기 <span class="expertise-cta-icon">→</span>
+                        </a>
+                    </article>
+                    
+                    <article class="expertise-card featured">
+                        <div class="expertise-icon automation">⚡</div>
+                        <h3 class="expertise-title">노코드 & 로우코드 자동화</h3>
+                        <p class="expertise-description">Make, n8n 등을 활용한 실제 운영 중인 워크플로우</p>
+                        <ul class="expertise-highlights">
+                            <li>외식업, 부동산, 이커머스 업종별 맞춤형 솔루션</li>
+                            <li>반복 업무 80% 절감 실제 사례</li>
+                            <li>API 연동부터 복잡한 데이터 처리까지</li>
+                        </ul>
+                        <a href="#contact" class="expertise-cta">
+                            더 알아보기 <span class="expertise-cta-icon">→</span>
+                        </a>
+                    </article>
+                    
+                    <article class="expertise-card">
+                        <div class="expertise-icon notion-framework">🧠</div>
+                        <h3 class="expertise-title">노션 IDEA 워크프레임</h3>
+                        <p class="expertise-description">옵시디언 제텔카스텐을 노션에 적용한 독창적 지식관리 시스템</p>
+                        <ul class="expertise-highlights">
+                            <li>개인 지식 관리 + 여러 사업 동시 관리</li>
+                            <li>아이디어부터 실행까지 연결되는 시스템</li>
+                            <li>팀 협업과 개인 생산성 동시 향상</li>
+                        </ul>
+                        <a href="#contact" class="expertise-cta">
+                            더 알아보기 <span class="expertise-cta-icon">→</span>
+                        </a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Approach Section -->
+        <section id="approach" class="approach-section" style="padding-top: 4rem !important; padding-bottom: 4rem !important;">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">저만의 접근 방식</h2>
+                    <p class="section-subtitle">3가지 핵심 가치로 진정한 변화를 만듭니다</p>
+                </div>
+                
+                <div class="approach-grid">
+                    <div class="approach-card">
+                        <div class="approach-number">01</div>
+                        <h3>동료 사업가로서의 진정한 공감</h3>
+                        <p>같은 사업가로서 기술적 한계 때문에 정작 중요한 일에 집중 못하는 답답함을 누구보다 이해합니다. 이론이 아닌 현장에서 직접 해결한 경험을 바탕으로 소통합니다.</p>
+                        <div class="approach-highlight">현재 운영: F&B, 부동산, 이커머스</div>
+                    </div>
+                    
+                    <div class="approach-card">
+                        <div class="approach-number">02</div>
+                        <h3>하프노마드 정신</h3>
+                        <p>사무실에 갇혀있지 않고 필요한 곳이면 어디든 가서 직접 경험하고 탐구합니다. 새로운 사업 기회와 인사이트는 현장에서 나온다는 철학을 실천합니다.</p>
+                        <div class="approach-highlight">일상의 절반은 유목민처럼</div>
+                    </div>
+                    
+                    <div class="approach-card">
+                        <div class="approach-number">03</div>
+                        <h3>지속적 진화</h3>
+                        <p>현재진행형으로 사업을 운영하며 얻는 새로운 인사이트를 교육생들과 공유합니다. 함께 방법론을 발전시켜 나가는 상호 성장 구조입니다.</p>
+                        <div class="approach-highlight">Living Lab 방식 교육</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What I Offer Section -->
+        <section id="services" class="services-section">
+            <div class="container">
+                <div class="section-header mt-4">
+                    <h2 class="section-title">제공 서비스</h2>
+                    <p class="section-subtitle">교육부터 컨설팅까지, 완전한 솔루션을 제공합니다</p>
+                </div>
+                
+                <div class="services-tabs">
+                    <button class="tab-button active" data-tab="education">교육 프로그램</button>
+                    <button class="tab-button" data-tab="consulting">컨설팅 & 솔루션</button>
+                </div>
+                
+                <div class="services-content">
+                    <div class="tab-content active" id="education">
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <h3>AI 바이브코딩 실전 과정</h3>
+                                <p>랜딩페이지부터 웹앱까지 실제로 완성하는 과정</p>
+                                <ul>
+                                    <li>ChatGPT/Claude 활용 코딩</li>
+                                    <li>전환율 최적화 적용</li>
+                                    <li>실제 배포까지 완주</li>
+                                </ul>
+                                <div class="service-price">문의</div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <h3>로우코드 자동화 워크숍</h3>
+                                <p>업종별 맞춤형 자동화 시스템 구축</p>
+                                <ul>
+                                    <li>Make, n8n 마스터 과정</li>
+                                    <li>업종별 템플릿 제공</li>
+                                    <li>개별 프로젝트 멘토링</li>
+                                </ul>
+                                <div class="service-price">문의</div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <h3>노션 IDEA 워크프레임</h3>
+                                <p>사업 통합 관리 시스템 개별 구축 지원</p>
+                                <ul>
+                                    <li>개인 맞춤형 시스템 설계</li>
+                                    <li>팀 협업 구조 최적화</li>
+                                    <li>지속 관리 가이드</li>
+                                </ul>
+                                <div class="service-price">문의</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="consulting">
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <h3>맞춤형 자동화 설계</h3>
+                                <p>실제 사업 현장에 맞는 개별화된 솔루션</p>
+                                <ul>
+                                    <li>현장 분석 및 진단</li>
+                                    <li>ROI 기반 우선순위 설정</li>
+                                    <li>단계별 구현 로드맵</li>
+                                </ul>
+                                <div class="service-price">협의</div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <h3>운영 최적화 컨설팅</h3>
+                                <p>사업가 관점에서의 효율화 방안 제시</p>
+                                <ul>
+                                    <li>업무 프로세스 재설계</li>
+                                    <li>기술 도입 전략 수립</li>
+                                    <li>팀 생산성 향상 방안</li>
+                                </ul>
+                                <div class="service-price">협의</div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <h3>노션 시스템 구축 지원</h3>
+                                <p>복잡하고 어려운 부분의 기술적 지원</p>
+                                <ul>
+                                    <li>고급 데이터베이스 설계</li>
+                                    <li>API 연동 및 자동화</li>
+                                    <li>유지보수 및 확장 지원</li>
+                                </ul>
+                                <div class="service-price">협의</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Projects Section -->
+        <section id="projects" class="projects-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">현재 운영 사업</h2>
+                    <p class="section-subtitle">실제로 검증하고 있는 사업들로 신뢰도를 구축합니다</p>
+                </div>
+                
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-icon">🍽️</div>
+                        <h3>F&B 자동화 솔루션</h3>
+                        <p>외식업 특화 시스템 개발 및 실제 매장 운영 준비</p>
+                        <div class="project-tags">
+                            <span class="tag">미친양꼬치</span>
+                            <span class="tag">주문 자동화</span>
+                            <span class="tag">재고 관리</span>
+                        </div>
+                        <div class="project-status">운영 준비 중</div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">🏢</div>
+                        <h3>상업용 부동산 인사이트</h3>
+                        <p>F&B 사업가 대상 전문 뉴스레터 발행</p>
+                        <div class="project-tags">
+                            <span class="tag">시장 분석</span>
+                            <span class="tag">입지 평가</span>
+                            <span class="tag">투자 가이드</span>
+                        </div>
+                        <div class="project-status">정기 발행 중</div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-icon">⚙️</div>
+                        <h3>소상공인 자동화 컨설팅</h3>
+                        <p>맞춤형 운영 최적화 솔루션 제공</p>
+                        <div class="project-tags">
+                            <span class="tag">지피터스</span>
+                            <span class="tag">프로세스 개선</span>
+                            <span class="tag">비용 절감</span>
+                        </div>
+                        <div class="project-status">진행 중</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Showcase Section -->
+        <section id="portfolio" class="portfolio-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">포트폴리오 하이라이트</h2>
+                    <p class="section-subtitle">실제 구현한 솔루션들을 직접 확인해보세요</p>
+                </div>
+                
+                <div class="portfolio-grid">
+                    <div class="portfolio-item featured">
+                        <div class="portfolio-image">
+                            <img src="./assets/images/voice2notion.jpg" alt="Voice2Notion 웹앱" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <a href="https://voice2notion.xyz/" class="portfolio-link" target="_blank" rel="noopener">
+                                    실제 체험하기 →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="portfolio-content">
+                            <h3>Voice2Notion 웹앱</h3>
+                            <p>음성 녹음을 클릭 한 번에 노션에 자동 저장하고 GPT로 요약하는 실용적 솔루션</p>
+                            <div class="portfolio-tech">
+                                <span class="tech-tag">Speech-to-Text API</span>
+                                <span class="tech-tag">Notion API</span>
+                                <span class="tech-tag">GPT Integration</span>
+                            </div>
+                            <div class="portfolio-impact">미니멀리스트를 위한 효율적 기록 시스템</div>
+                        </div>
+                    </div>
+                    
+                    <div class="portfolio-item">
+                        <div class="portfolio-image">
+                            <img src="./assets/images/notion-system.jpg" alt="노션 지식관리 시스템" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <a href="https://half-nomad.github.io/Notion-PPT/" class="portfolio-link" target="_blank" rel="noopener">
+                                    시스템 보기 →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="portfolio-content">
+                            <h3>노션 지식관리 시스템 IDEA</h3>
+                            <p>노션으로 시작하는 개인지식관리의 새로운 접근법</p>
+                            <div class="portfolio-tech">
+                                <span class="tech-tag">Notion Database</span>
+                                <span class="tech-tag">Zettelkasten Method</span>
+                                <span class="tech-tag">Knowledge Graph</span>
+                            </div>
+                            <div class="portfolio-impact">체계적이고 지속가능한 지식 축적 방법론</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="final-cta-section">
+            <div class="container">
+                <div class="final-cta-content">
+                    <!-- 메인 헤드라인 -->
+                    <div class="final-headline">
+                        <h2 class="headline-text">
+                            함께 더 나은 
+                            <span class="gradient-text">해결책을 만들어</span> 
+                            가시겠어요?
+                        </h2>
+                        <p class="headline-subtitle">
+                            협업 제안이나 강의 요청이 있으시다면 언제든 연락주세요
+                        </p>
+                    </div>
+
+                    <!-- 협업 영역 카드들 -->
+                    <div class="benefits-grid">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🤝</div>
+                            <h3>협업 프로젝트</h3>
+                            <p>AI/자동화 솔루션 공동 개발 및 사업 파트너십</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🎓</div>
+                            <h3>강의 & 워크숍</h3>
+                            <p>기업 교육, 컨퍼런스 강연, 실무진 대상 워크숍</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">📝</div>
+                            <h3>콘텐츠 협업</h3>
+                            <p>공동 콘텐츠 제작, 케이스 스터디, 지식 공유</p>
+                        </div>
+                    </div>
+
+                    <!-- 메인 CTA 박스 -->
+                    <div class="main-cta-container">
+                        <div class="cta-content">
+                            <h3 class="cta-title">연락 방법</h3>
+                            
+                            <div class="contact-methods">
+                                <div class="contact-method primary">
+                                    <div class="method-icon">📧</div>
+                                    <div class="method-content">
+                                        <h4>협업 제안</h4>
+                                        <a href="mailto:Mokka@half-nomad.com?subject=협업 제안&body=안녕하세요! 협업을 제안드리고 싶습니다.%0D%0A%0D%0A• 제안 유형: (협업 프로젝트/강의 요청/콘텐츠 협업)%0D%0A• 상세 내용: %0D%0A• 예상 일정: %0D%0A• 연락 가능한 시간대: %0D%0A%0D%0A감사합니다." 
+                                           class="contact-link main">
+                                            📧 협업 제안하기
+                                        </a>
+                                        <p class="method-description">24시간 내 응답 보장</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-method primary">
+                                    <div class="method-icon">🎤</div>
+                                    <div class="method-content">
+                                        <h4>강의 요청</h4>
+                                        <a href="mailto:Mokka@half-nomad.com?subject=강의 요청&body=안녕하세요! 강의를 요청드리고 싶습니다.%0D%0A%0D%0A• 강의 주제: %0D%0A• 대상 및 규모: %0D%0A• 희망 일정: %0D%0A• 장소 (온라인/오프라인): %0D%0A• 기타 요구사항: %0D%0A%0D%0A감사합니다." 
+                                           class="contact-link main">
+                                            🎤 강의 요청하기
+                                        </a>
+                                        <p class="method-description">맞춤형 강의 프로그램 제공</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-alternatives">
+                                    <p class="alternatives-label">또는 편한 방법으로 연락하세요</p>
+                                    <div class="contact-options">
+                                        <a href="https://threads.net/@half.nomad" target="_blank" rel="noopener" class="contact-option">
+                                            <span class="contact-icon">🧵</span>
+                                            <span>Threads DM</span>
+                                        </a>
+                                        <a href="https://voice2notion.xyz/" target="_blank" rel="noopener" class="contact-option">
+                                            <span class="contact-icon">🎤</span>
+                                            <span>솔루션 체험</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 마지막 메시지 -->
+                    <div class="final-message">
+                        <p class="message-text">
+                            <strong>서로의 경험을 나누며 함께 성장하는 파트너십</strong><br>
+                            같은 길을 걷는 사업가로서 의미 있는 협업을 기대합니다
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 백 투 탑 버튼 -->
+    <button class="back-to-top" id="back-to-top" aria-label="맨 위로 이동">
+        <span>↑</span>
+    </button>
+
+    <!-- JavaScript는 비동기 로드 -->
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

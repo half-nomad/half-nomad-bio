@@ -1,0 +1,58 @@
+/* ===============================
+   HERO TRUST MESSAGE STYLES
+=============================== */
+
+/* 히어로 신뢰도 메시지 */
+.hero-trust-message {
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.trust-text {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.trust-text strong {
+    color: var(--text-primary);
+    background: var(--gradient-headline);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 브랜드 태그 스타일 개선 */
+.brand-tag {
+    background: rgba(101, 175, 255, 0.1);
+    border: 1px solid rgba(101, 175, 255, 0.3);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent);
+    transition: all var(--transition-normal);
+}
+
+.brand-tag:hover {
+    background: rgba(101, 175, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .hero-trust-message {
+        padding: var(--spacing-md);
+        margin-top: var(--spacing-md);
+    }
+    
+    .trust-text {
+        font-size: var(--font-size-sm);
+    }
+}

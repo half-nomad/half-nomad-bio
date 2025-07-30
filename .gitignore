@@ -1,0 +1,40 @@
+# 보안 관련 파일
+config.js
+.env
+*.key
+*.secret
+
+# 노션 API 파일 (보안상 제외)
+notion-api.js
+
+# 임시 파일
+*.tmp
+*.temp
+temp_*
+fix_*
+
+# 백업 파일
+backup/
+docs/
+
+# 로그 파일
+*.log
+work-log.md
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
+
+# IDE 설정
+.vscode/
+.idea/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 빌드 파일
+dist/
+build/
