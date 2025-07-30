@@ -2,8 +2,8 @@
 # 파일: netlify.toml
 
 [build]
-  # 빌드 명령어 (없으면 비워둠)
-  command = ""
+  # 빌드 명령어
+  command = "npm install"
   # 퍼블리시할 디렉토리
   publish = "."
 
@@ -11,20 +11,35 @@
   # 함수 디렉토리
   directory = "netlify/functions"
 
-# 환경 변수 설정 (실제 값은 Netlify 대시보드에서 설정)
+# 환경 변수 (실제 값은 Netlify 대시보드에서 설정)
 [context.production.environment]
   NOTION_TOKEN = "your_notion_token_here"
   NOTION_DATABASE_ID = "23a091314f8f80d9a84fe29e3c59f88d"
+  GITHUB_TOKEN = "your_github_token_here"
 
-# 리다이렉트 규칙
+# API 엔드포인트 리다이렉트
+[[redirects]]
+  from = "/api/webhook"
+  to = "/.netlify/functions/notion-webhook"
+  status = 200
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-# 헤더 설정
+# 보안 헤더
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+
+# 정적 파일 헤더
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
