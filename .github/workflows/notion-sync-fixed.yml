@@ -1,22 +1,19 @@
-name: 🚀 노션 블로그 동기화
+name: 🚀 노션 블로그 동기화 (수정버전)
 
-# 트리거 조건
+# 트리거 조건 - 디버깅을 위해 수동 실행만 일시적으로 활성화
 on:
-  # 🕐 자동 스케줄링 (추천) - 매 30분마다 체크
-  schedule:
-    - cron: '*/30 * * * *'  # 30분마다 실행
-    
   # 수동 실행 (GitHub Actions 탭에서)
   workflow_dispatch:
     inputs:
-      trigger_source:
-        description: '트리거 소스'
+      debug_mode:
+        description: '디버그 모드 활성화'
         required: false
-        default: 'manual'
+        default: 'true'
+        type: boolean
   
-  # Repository Dispatch (외부 API 호출용)
-  repository_dispatch:
-    types: [notion-sync]
+  # 스케줄링은 테스트 후 활성화
+  # schedule:
+  #   - cron: '0 */2 * * *'  # 2시간마다 실행
 
 # 환경 변수
 env:
@@ -28,44 +25,84 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # 1. 코드 체크아웃
+      # 1. 환경 변수 디버깅
+      - name: 🔍 환경 변수 체크
+        run: |
+          echo "=== 환경 변수 체크 ==="
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "❌ NOTION_TOKEN이 설정되지 않았습니다."
+          else
+            echo "✅ NOTION_TOKEN 설정됨 (길이: ${#NOTION_TOKEN})"
+          fi
+          
+          if [ -z "$NOTION_DATABASE_ID" ]; then
+            echo "❌ NOTION_DATABASE_ID가 설정되지 않았습니다."
+          else
+            echo "✅ NOTION_DATABASE_ID 설정됨: $NOTION_DATABASE_ID"
+          fi
+      
+      # 2. 코드 체크아웃
       - name: 📥 코드 체크아웃
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
       
-      # 2. Node.js 설정
+      # 3. Node.js 설정
       - name: 🟢 Node.js 설정
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           # cache 제거 - package-lock.json이 없으므로
       
-      # 3. 노션 클라이언트 설치
+      # 4. 의존성 설치
       - name: 📦 의존성 설치
         run: |
-          npm init -y
-          npm install @notionhq/client
+          echo "=== 의존성 설치 ==="
+          npm install
+          
+          echo "=== 설치된 패키지 확인 ==="
+          npm list
       
-      # 4. 노션 데이터 동기화 스크립트 실행
-      - name: 🔄 노션 블로그 동기화
+      # 5. 동기화 스크립트 생성
+      - name: 📝 동기화 스크립트 생성
         run: |
-          cat > sync-notion.js << 'EOF'
-          const { Client } = require('@notionhq/client');
-          const fs = require('fs');
+          cat > sync-notion.mjs << 'EOF'
+          import { Client } from '@notionhq/client';
+          import { writeFileSync } from 'fs';
 
           async function syncNotionBlog() {
             try {
               console.log('🚀 노션 블로그 동기화 시작...');
               
-              // 노션 클라이언트 초기화
-              const notion = new Client({ 
-                auth: process.env.NOTION_TOKEN 
-              });
-              
+              // 환경 변수 검증
+              const token = process.env.NOTION_TOKEN;
               const databaseId = process.env.NOTION_DATABASE_ID;
               
+              if (!token) {
+                throw new Error('NOTION_TOKEN이 설정되지 않았습니다.');
+              }
+              
+              if (!databaseId) {
+                throw new Error('NOTION_DATABASE_ID가 설정되지 않았습니다.');
+              }
+              
+              console.log(`📋 데이터베이스 ID: ${databaseId}`);
+              
+              // 노션 클라이언트 초기화
+              const notion = new Client({ auth: token });
+              
+              console.log('🔍 노션 연결 테스트...');
+              
+              // 데이터베이스 정보 먼저 가져오기 (연결 테스트)
+              const database = await notion.databases.retrieve({
+                database_id: databaseId
+              });
+              
+              console.log(`✅ 데이터베이스 연결 성공: ${database.title[0]?.plain_text || 'Untitled'}`);
+              
               // 발행된 포스트 가져오기
+              console.log('📚 포스트 조회 중...');
               const response = await notion.databases.query({
                 database_id: databaseId,
                 filter: {
@@ -75,16 +112,29 @@ jobs:
                 sorts: [{
                   property: 'Published Date',
                   direction: 'descending'
-                }]
+                }],
+                page_size: 10  // 테스트용으로 10개만
               });
               
               console.log(`📊 ${response.results.length}개의 발행된 포스트 발견`);
               
+              if (response.results.length === 0) {
+                console.log('⚠️ 발행된 포스트가 없습니다. Status가 "Published"인 페이지가 있는지 확인하세요.');
+              }
+              
               // 포스트 데이터 변환
               const posts = [];
-              for (const page of response.results) {
-                const postData = await transformNotionPage(notion, page);
-                posts.push(postData);
+              for (let i = 0; i < response.results.length; i++) {
+                const page = response.results[i];
+                console.log(`📄 포스트 ${i + 1}/${response.results.length} 처리 중...`);
+                
+                try {
+                  const postData = await transformNotionPage(notion, page);
+                  posts.push(postData);
+                  console.log(`✅ "${postData.title}" 변환 완료`);
+                } catch (error) {
+                  console.error(`❌ 포스트 변환 실패 (${page.id}):`, error.message);
+                }
               }
               
               // blog-data.json 생성
@@ -92,16 +142,23 @@ jobs:
                 posts: posts,
                 lastUpdated: new Date().toISOString(),
                 version: "1.0.0",
-                source: "github-actions"
+                source: "github-actions",
+                syncInfo: {
+                  totalProcessed: response.results.length,
+                  successfullyConverted: posts.length,
+                  databaseId: databaseId
+                }
               };
               
               // 파일 저장
-              fs.writeFileSync('blog-data.json', JSON.stringify(blogData, null, 2));
+              writeFileSync('blog-data.json', JSON.stringify(blogData, null, 2));
               
-              console.log(`✅ blog-data.json 업데이트 완료! (${posts.length}개 포스트)`);
+              console.log(`✅ blog-data.json 업데이트 완료!`);
+              console.log(`📊 총 ${posts.length}개 포스트 동기화됨`);
               
             } catch (error) {
               console.error('❌ 동기화 오류:', error);
+              console.error('스택 트레이스:', error.stack);
               process.exit(1);
             }
           }
@@ -113,23 +170,28 @@ jobs:
             const title = properties.Title?.title?.[0]?.plain_text || 'Untitled';
             const excerpt = properties.Excerpt?.rich_text?.[0]?.plain_text || '';
             const categoryData = properties.Category?.select;
-            const category = categoryData?.name?.toLowerCase().replace(/\\s+/g, '-') || 'general';
+            const category = categoryData?.name?.toLowerCase().replace(/\s+/g, '-') || 'general';
             const categoryName = categoryData?.name || 'General';
             const publishedDate = properties['Published Date']?.date?.start || new Date().toISOString().split('T')[0];
-            const readTime = `\${properties['Read Time']?.number || 5}분`;
+            const readTime = `${properties['Read Time']?.number || 5}분`;
             const thumbnail = properties.Thumbnail?.rich_text?.[0]?.plain_text || '📝';
+
+            console.log(`  제목: ${title}`);
+            console.log(`  카테고리: ${categoryName}`);
+            console.log(`  발행일: ${publishedDate}`);
 
             // 페이지 콘텐츠 가져오기
             let content = '';
             try {
               const blocks = await notion.blocks.children.list({
                 block_id: page.id,
-                page_size: 100
+                page_size: 50  // 콘텐츠가 많으면 페이지네이션 필요
               });
               
               content = transformBlocksToHTML(blocks.results);
+              console.log(`  콘텐츠 블록 수: ${blocks.results.length}`);
             } catch (error) {
-              console.warn(`⚠️ 페이지 \${page.id} 콘텐츠 로드 실패:`, error.message);
+              console.warn(`⚠️ 페이지 ${page.id} 콘텐츠 로드 실패:`, error.message);
               content = '<p>콘텐츠를 불러올 수 없습니다.</p>';
             }
 
@@ -163,41 +225,42 @@ jobs:
             switch (type) {
               case 'paragraph':
                 const text = extractRichText(block.paragraph.rich_text);
-                return text ? `<p>\${text}</p>\\n` : '';
+                return text ? `<p>${text}</p>\n` : '';
                 
               case 'heading_1':
                 const h1Text = extractRichText(block.heading_1.rich_text);
-                return `<h2>\${h1Text}</h2>\\n`;
+                return `<h2>${h1Text}</h2>\n`;
                 
               case 'heading_2':
                 const h2Text = extractRichText(block.heading_2.rich_text);
-                return `<h3>\${h2Text}</h3>\\n`;
+                return `<h3>${h2Text}</h3>\n`;
                 
               case 'heading_3':
                 const h3Text = extractRichText(block.heading_3.rich_text);
-                return `<h4>\${h3Text}</h4>\\n`;
+                return `<h4>${h3Text}</h4>\n`;
                 
               case 'bulleted_list_item':
                 const liText = extractRichText(block.bulleted_list_item.rich_text);
-                return `<li>\${liText}</li>\\n`;
+                return `<li>${liText}</li>\n`;
                 
               case 'numbered_list_item':
                 const numText = extractRichText(block.numbered_list_item.rich_text);
-                return `<li>\${numText}</li>\\n`;
+                return `<li>${numText}</li>\n`;
                 
               case 'quote':
                 const quoteText = extractRichText(block.quote.rich_text);
-                return `<blockquote>\${quoteText}</blockquote>\\n`;
+                return `<blockquote>${quoteText}</blockquote>\n`;
                 
               case 'code':
                 const codeText = extractRichText(block.code.rich_text);
                 const language = block.code.language || '';
-                return `<pre><code class="\${language}">\${escapeHtml(codeText)}</code></pre>\\n`;
+                return `<pre><code class="${language}">${escapeHtml(codeText)}</code></pre>\n`;
                 
               case 'divider':
-                return '<hr>\\n';
+                return '<hr>\n';
                 
               default:
+                console.log(`⚠️ 지원되지 않는 블록 타입: ${type}`);
                 return '';
             }
           }
@@ -215,16 +278,16 @@ jobs:
               if (textObj.annotations) {
                 const { bold, italic, strikethrough, underline, code } = textObj.annotations;
                 
-                if (code) text = `<code>\${text}</code>`;
-                if (bold) text = `<strong>\${text}</strong>`;
-                if (italic) text = `<em>\${text}</em>`;
-                if (strikethrough) text = `<del>\${text}</del>`;
-                if (underline) text = `<u>\${text}</u>`;
+                if (code) text = `<code>${text}</code>`;
+                if (bold) text = `<strong>${text}</strong>`;
+                if (italic) text = `<em>${text}</em>`;
+                if (strikethrough) text = `<del>${text}</del>`;
+                if (underline) text = `<u>${text}</u>`;
               }
               
               // 링크 처리
               if (textObj.href) {
-                text = `<a href="\${textObj.href}" target="_blank" rel="noopener">\${text}</a>`;
+                text = `<a href="${textObj.href}" target="_blank" rel="noopener">${text}</a>`;
               }
               
               return text;
@@ -245,10 +308,25 @@ jobs:
           // 실행
           syncNotionBlog();
           EOF
-          
-          node sync-notion.js
       
-      # 5. 변경사항 커밋 및 푸시
+      # 6. 노션 동기화 실행
+      - name: 🔄 노션 블로그 동기화 실행
+        run: |
+          echo "=== 동기화 시작 ==="
+          node sync-notion.mjs
+          
+          echo "=== 생성된 파일 확인 ==="
+          if [ -f "blog-data.json" ]; then
+            echo "✅ blog-data.json 파일 생성됨"
+            echo "📊 파일 크기: $(wc -c < blog-data.json) bytes"
+            echo "🔍 첫 10줄 미리보기:"
+            head -10 blog-data.json
+          else
+            echo "❌ blog-data.json 파일이 생성되지 않았습니다."
+            exit 1
+          fi
+      
+      # 7. 변경사항 커밋 및 푸시
       - name: 📤 변경사항 커밋
         run: |
           git config --local user.email "action@github.com"
@@ -263,9 +341,11 @@ jobs:
             echo "📋 변경사항 없음 - 동기화 불필요"
           fi
       
-      # 6. 결과 요약
-      - name: 📊 동기화 결과
+      # 8. 결과 요약
+      - name: 📊 동기화 결과 요약
         run: |
           echo "🎉 노션 블로그 동기화 완료!"
           echo "📅 실행 시간: $(date)"
           echo "🔗 GitHub Pages: https://half-nomad.github.io/half-nomad-bio/"
+          echo "📁 워크스페이스 내용:"
+          ls -la

@@ -1,0 +1,21 @@
+{
+  "name": "half-nomad-bio",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Half Nomad Bio - Personal Website with Notion Blog Integration",
+  "scripts": {
+    "sync-notion": "node sync-notion.mjs",
+    "test-notion": "node test-notion-connection.mjs"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/half-nomad/half-nomad-bio.git"
+  },
+  "keywords": ["notion", "blog", "github-actions", "static-site"],
+  "author": "Half Nomad",
+  "license": "MIT"
+}
