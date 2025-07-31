@@ -26,6 +26,8 @@ env:
 jobs:
   sync-notion-blog:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 리포지토리에 파일 쓰기 권한
     
     steps:
       # 1. 코드 체크아웃

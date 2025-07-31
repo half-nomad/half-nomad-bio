@@ -23,6 +23,8 @@ env:
 jobs:
   sync-notion-blog:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 리포지토리에 파일 쓰기 권한
     
     steps:
       # 1. 환경 변수 디버깅
@@ -329,12 +331,20 @@ jobs:
       # 7. 변경사항 커밋 및 푸시
       - name: 📤 변경사항 커밋
         run: |
+          # Git 사용자 설정
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
+          # 변경사항 확인
+          echo "=== Git 상태 확인 ==="
+          git status
+          
           if [ -n "$(git status --porcelain)" ]; then
+            echo "✅ 변경사항 발견 - 커밋 진행"
             git add blog-data.json
             git commit -m "🚀 노션 블로그 자동 동기화 $(date '+%Y-%m-%d %H:%M:%S')"
+            
+            echo "=== Push 시도 ==="
             git push
             echo "✅ 블로그 데이터 업데이트 완료!"
           else
