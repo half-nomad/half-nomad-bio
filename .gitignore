@@ -12,6 +12,7 @@ notion-api.js
 *.temp
 temp_*
 fix_*
+temp_line.txt
 
 # 백업 파일
 backup/
@@ -38,3 +39,35 @@ yarn-error.log*
 # 빌드 파일
 dist/
 build/
+
+# 테스트 결과 (테스트 폴더는 유지, 결과만 제외)
+tests/screenshots/
+tests/results/
+
+# 에디터 임시 파일
+*~
+*.swp
+*.swo
+
+# 압축 파일
+*.zip
+*.tar.gz
+*.rar
+
+# 캐시 파일
+.cache/
+*.cache
+
+# Claude 데스크톱 앱 파일들 (웹사이트와 무관)
+claude.exe
+*.dll
+*.pak
+*.dat
+*.bin
+*.ico
+*.png
+*.asar
+squirrel.exe
+resources/
+locales/
+Squirrel-*.log
