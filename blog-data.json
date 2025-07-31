@@ -1,11 +1,36 @@
 {
-  "posts": [],
-  "lastUpdated": "2025-07-31T14:31:02.082Z",
+  "posts": [
+    {
+      "id": "241091314f8f81039f07d5018b31a6a1",
+      "notionId": "24109131-4f8f-8103-9f07-d5018b31a6a1",
+      "title": "Untitled",
+      "excerpt": "GitHub Actions와 Notion API를 활용하여 블로그 콘텐츠를 자동으로 동기화하는 방법을 알아보세요. 노션에서 글을 쓰면 자동으로 웹사이트에 배포되는 마법 같은 자동화를 경험해보세요.",
+      "category": "general",
+      "categoryName": "General",
+      "date": "2025-07-31",
+      "readTime": "7분",
+      "thumbnail": "🤖",
+      "content": "<p>노션에서 글을 작성하면 자동으로 내 블로그 웹사이트에 배포될 수 있다면 얼마나 편리할까요? 오늘은 GitHub Actions와 Notion API를 홀렵한 완전 자동화 시스템을 구축하는 방법을 알아보겠습니다.</p>\n<p>🎯 이 자동화로 얻을 수 있는 혼억의 효과:</p>\n<li>노션에서 글 작성 → 자동으로 웹사이트 배포</li>\n<li>반복적인 수동 작업 제로</li>\n<li>콘텐츠 작성에만 집중 가능</li>\n<p>이 시스템이 얼마나 강력한지 직접 경험해보세요. 지금 이 글도 노션 API를 통해 자동 생성된 후, GitHub Actions를 통해 웹사이트에 배포되었습니다! 🎉</p>"
+    },
+    {
+      "id": "240091314f8f80c49caae4e3bb41ab66",
+      "notionId": "24009131-4f8f-80c4-9caa-e4e3bb41ab66",
+      "title": "Untitled",
+      "excerpt": "디지털 노마드 라이프스타일과 생산성 향상을 위한 실용적인 팁과 인사이트를 공유합니다. 원격 근무, AI 자동화, 그리고 자유로운 삶을 위한 여정을 함께 해보세요.",
+      "category": "general",
+      "categoryName": "General",
+      "date": "2025-07-31",
+      "readTime": "3분",
+      "thumbnail": "🌍",
+      "content": "<p>안녕하세요! Half Nomad 블로그에 오신 것을 진심으로 환영합니다. 🎉</p>\n<p>이곳은 디지털 노마드 라이프스타일을 꿈꾸는 분들과 이미 그 여정을 시작한 분들을 위한 공간입니다.</p>\n<p>🚀 이 블로그에서 다룰 주요 주제들:</p>\n<li>원격 근무와 디지털 노마드 라이프스타일 팁</li>\n<li>AI 자동화 도구를 활용한 생산성 향상</li>\n<li>웹 개발과 노코드/로우코드 솔루션</li>\n<li>개인 브랜딩과 온라인 비즈니스 구축</li>\n<p>함께 더 자유롭고 창의적인 삶을 만들어가요! 💪✨</p>"
+    }
+  ],
+  "lastUpdated": "2025-07-31T14:41:20.265Z",
   "version": "1.0.0",
   "source": "github-actions",
   "syncInfo": {
-    "totalProcessed": 0,
-    "successfullyConverted": 0,
+    "totalProcessed": 2,
+    "successfullyConverted": 2,
     "databaseId": "23a091314f8f80d9a84fe29e3c59f88d"
   }
 }
